@@ -16,17 +16,30 @@ if __name__ == '__main__':
 
     min_loss = float('inf')
     best_state_dict = None
+    losses = []
 
     for epoch in range(EPOCHS):
         optimizer.zero_grad()
         loss = model.pde_loss(BATCH_SIZE) + model.init_loss(BATCH_SIZE) + model.boundary_loss(BATCH_SIZE)
         loss.backward()
         optimizer.step()
-        if loss.item() < min_loss:
-            min_loss = loss.item()
+        ls = loss.item()
+        losses.append(ls)
+        if ls < min_loss:
+            min_loss = ls
             best_state_dict = model.state_dict().copy()
         if epoch % 500 == 499:
             print(f'Epoch {epoch + 1}/{EPOCHS}: Loss {loss.item():.5f}')
     
     model.load_state_dict(best_state_dict)
     torch.save(model, os.path.join(os.path.dirname(__file__), 'model.pth'))
+
+    # draw loss curve and save as png
+    # log scale
+    import matplotlib.pyplot as plt
+    plt.plot(losses)
+    plt.yscale('log')
+    plt.xlabel('epoch')
+    plt.ylabel('loss')
+    plt.savefig(os.path.join(os.path.dirname(__file__), 'loss.png'))
+    plt.close()

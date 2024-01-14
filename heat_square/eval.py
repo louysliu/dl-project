@@ -25,10 +25,11 @@ if __name__ == '__main__':
     y_tensor = torch.tensor(y_grid, dtype=torch.float32)
 
     # Time range for visualization
-    t_values = np.linspace(0, 2, 101)  # Change this based on your specific needs
+    t_values = np.linspace(0, 1, 101)  # Change this based on your specific needs
 
     # Prepare plots for animation
-    fig, axs = plt.subplots(1, 2, figsize=(13, 5))
+    # fig, axs = plt.subplots(1, 2, figsize=(13, 5))
+    fig, ax = plt.subplots()
 
     t_tensor = torch.full_like(x_tensor, fill_value=0.0, dtype=torch.float32)
     combined_input = torch.stack([x_tensor.flatten(), y_tensor.flatten(), t_tensor.flatten()], dim=1)
@@ -36,7 +37,7 @@ if __name__ == '__main__':
     # Evaluate the model
     u_tensor = model(combined_input).reshape(x_tensor.shape)
 
-    cax = axs[0].pcolormesh(x_grid, y_grid, u_tensor.detach().numpy(), cmap='plasma', vmin=min(model.u0, model.u1, model.u2), vmax=max(model.u0, model.u1, model.u2))
+    cax = ax.pcolormesh(x_grid, y_grid, u_tensor.detach().numpy(), cmap='plasma', vmin=min(model.u0, model.u1, model.u2), vmax=max(model.u0, model.u1, model.u2))
     fig.colorbar(cax)
 
     # add FEM solution
@@ -57,7 +58,7 @@ if __name__ == '__main__':
         cax.set_array(u_tensor.detach().numpy().flatten())
         # fem_cax.set_array(fem_tensor.detach().numpy().flatten())
         
-        axs[0].set_title(f"Field $u(x, y)$ at $t={t:.2f}$")
+        ax.set_title(f"Field $u(x, y)$ at $t={t:.2f}$")
         # axs[1].set_title(f"FEM Field $u(x, y)$ at $t={t:.2f}$")   
 
 
