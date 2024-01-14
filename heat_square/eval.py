@@ -10,8 +10,8 @@ if __name__ == '__main__':
     basedir = os.path.dirname(__file__)
 
     # Visualize the model
-    model = HeatPINN2(alpha=1, u0=0, u1=1, u2=0)
-    model.load_state_dict(torch.load(os.path.join(basedir,'model.pth')))
+    model = torch.load(os.path.join(basedir,'model.pth'), map_location=torch.device('cpu'))
+    model.eval()
     
     # Generate a grid of x and y values
     x_values = np.linspace(0, 1, 400)
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     y_tensor = torch.tensor(y_grid, dtype=torch.float32)
 
     # Time range for visualization
-    t_values = np.linspace(0, 30, 151)  # Change this based on your specific needs
+    t_values = np.linspace(0, 2, 101)  # Change this based on your specific needs
 
     # Prepare plots for animation
     fig, ax = plt.subplots()
@@ -48,7 +48,7 @@ if __name__ == '__main__':
         # Plot the field u(x, y) for this t value
         cax.set_array(u_tensor.detach().numpy().flatten())
         
-        ax.set_title(f"Field u(x, y) at t={t:.2f}")
+        ax.set_title(f"Field $u(x, y)$ at $t={t:.2f}$")
 
 
     # Create animation

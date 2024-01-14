@@ -11,10 +11,11 @@ if __name__ == '__main__':
     basedir = os.path.dirname(__file__)
 
     # Visualize the model
-    model = HeatPINN1(alpha=1, u0=0, u1=1)
-    model.load_state_dict(torch.load(os.path.join(basedir,'model.pth')))
+    model = torch.load(os.path.join(basedir,'model.pth'), map_location=torch.device('cpu'))
+    model.eval()
 
-    precise_model = HeatPrecise1(alpha=1, u0=0, u1=1)
+    precise_model = HeatPrecise1(alpha=model.alpha, u0=model.u0, u1=model.u1)
+    precise_model.eval()
     
     # Generate a grid of x and y values
     x_values = np.linspace(-1, 1, 400)
@@ -26,7 +27,7 @@ if __name__ == '__main__':
     y_tensor = torch.tensor(y_grid, dtype=torch.float32)
 
     # Time range for visualization
-    t_values = np.linspace(0, 5, 51)  # Change this based on your specific needs
+    t_values = np.linspace(0, 1, 101)  # Change this based on your specific needs
 
     # Prepare plots for animation
     fig, axs = plt.subplots(1, 2, figsize=(13, 5))
@@ -60,8 +61,8 @@ if __name__ == '__main__':
         cax.set_array(u_tensor.detach().numpy().flatten())
         precise_cax.set_array(precise_tensor.detach().numpy().flatten())
         
-        axs[0].set_title(f"Field u(x, y) at t={t:.2f}")
-        axs[1].set_title(f"Precise Field u(x, y) at t={t:.2f}")
+        axs[0].set_title(f"Field $u(x, y)$ at $t={t:.2f}$")
+        axs[1].set_title(f"Precise Field $u(x, y)$ at $t={t:.2f}$")
 
 
     # Create animation
@@ -72,4 +73,4 @@ if __name__ == '__main__':
     # plt.show()
 
     # Uncomment the line below to save the animation as a file
-    ani.save(os.path.join(basedir,'u_field_evolution.gif'), writer='imagemagick')
+    ani.save(os.path.join(basedir,'u_field.gif'), writer='imagemagick')
