@@ -14,7 +14,7 @@ from typing import Union
 
 class HeatFEM:
     def __init__(self, alpha: float, u0: float, u1: float, u2: float):
-        self.grid = gen_grid(0.01, u0, u1, u2)
+        self.grid = gen_grid(alpha)
 
     def __call__(self, input: Union[torch.Tensor, np.ndarray]):
         if isinstance(input, torch.Tensor):
