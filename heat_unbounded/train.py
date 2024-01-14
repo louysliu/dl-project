@@ -8,7 +8,7 @@ from conf import *
 import os
 
 if __name__ == '__main__':
-    model = HeatPINN1(alpha=1, u0=0, u1=1).to(device)
+    model = HeatPINN1(alpha=1.0, u0=0, u1=1.0).to(device)
     optimizer = optim.Adam(model.parameters(), lr=1e-3)
 
     EPOCHS = 10000
@@ -26,7 +26,7 @@ if __name__ == '__main__':
             min_loss = loss.item()
             best_state_dict = model.state_dict().copy()
         if epoch % 500 == 499:
-            print(f'Epoch {epoch + 1}/{EPOCHS}: Loss {loss.item():.4f}')
+            print(f'Epoch {epoch + 1}/{EPOCHS}: Loss {loss.item():.5f}')
     
     model.load_state_dict(best_state_dict)
     torch.save(model, os.path.join(os.path.dirname(__file__), 'model.pth'))

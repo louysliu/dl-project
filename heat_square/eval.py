@@ -35,14 +35,14 @@ if __name__ == '__main__':
 
     # Evaluate the model
     u_tensor = model(combined_input).reshape(x_tensor.shape)
-    fem_tensor = fem_model(combined_input).reshape(x_tensor.shape)
 
-    cax = axs[0].pcolormesh(x_grid, y_grid, u_tensor.detach().numpy(), cmap='plasma', vmin=0, vmax=1)
+    cax = axs[0].pcolormesh(x_grid, y_grid, u_tensor.detach().numpy(), cmap='plasma', vmin=min(model.u0, model.u1, model.u2), vmax=max(model.u0, model.u1, model.u2))
     fig.colorbar(cax)
 
     # add FEM solution
-    fem_cax = axs[1].pcolormesh(x_grid, y_grid, fem_tensor.detach().numpy(), cmap='plasma', vmin=0, vmax=1)
-    fig.colorbar(fem_cax)
+    # fem_tensor = fem_model(combined_input).reshape(x_tensor.shape)
+    # fem_cax = axs[1].pcolormesh(x_grid, y_grid, fem_tensor.detach().numpy(), cmap='plasma', vmin=min(model.u0, model.u1, model.u2), vmax=max(model.u0, model.u1, model.u2))
+    # fig.colorbar(fem_cax)
 
     def update(t):
         # Create a combined tensor for x, y, and the current t value
@@ -51,14 +51,14 @@ if __name__ == '__main__':
 
         # Evaluate the model
         u_tensor = model(combined_input).reshape(x_tensor.shape)
-        fem_tensor = fem_model(combined_input).reshape(x_tensor.shape)
+        # fem_tensor = fem_model(combined_input).reshape(x_tensor.shape)
 
         # Plot the field u(x, y) for this t value
         cax.set_array(u_tensor.detach().numpy().flatten())
-        fem_cax.set_array(fem_tensor.detach().numpy().flatten())
+        # fem_cax.set_array(fem_tensor.detach().numpy().flatten())
         
         axs[0].set_title(f"Field $u(x, y)$ at $t={t:.2f}$")
-        axs[1].set_title(f"FEM Field $u(x, y)$ at $t={t:.2f}$")   
+        # axs[1].set_title(f"FEM Field $u(x, y)$ at $t={t:.2f}$")   
 
 
     # Create animation
