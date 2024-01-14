@@ -1,0 +1,5 @@
+.vscode/
+__pycache__/
+*.gif
+*.mp4
+*.pth
