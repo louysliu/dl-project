@@ -4,7 +4,30 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from basemodel import HeatPINN
 from conf import *
+from fem import gen_grid, grid_interpolate
 import torch
+import torch.nn as nn
+
+import numpy as np
+from typing import Union
+
+
+class HeatFEM:
+    def __init__(self, alpha: float, u0: float, u1: float, u2: float):
+        self.grid = gen_grid(0.01, u0, u1, u2)
+
+    def __call__(self, input: Union[torch.Tensor, np.ndarray]):
+        if isinstance(input, torch.Tensor):
+            input = input.detach().numpy().astype(np.float64)
+        
+        # traverse the first dimension
+        output = np.zeros((input.shape[0], 1))
+        for i in range(input.shape[0]):
+            output[i, 0] = grid_interpolate(self.grid, input[i, :])
+        
+        # concatenate the first dimension
+        return torch.tensor(output, dtype=torch.float32)
+        
 
 
 class HeatPINN2(HeatPINN):

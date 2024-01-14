@@ -10,7 +10,7 @@ import os
 if __name__ == '__main__':
     basedir = os.path.dirname(__file__)
 
-    # Visualize the model
+    # load model from disk
     model = torch.load(os.path.join(basedir,'model.pth'), map_location=torch.device('cpu'))
     model.eval()
 
@@ -45,8 +45,6 @@ if __name__ == '__main__':
     # add precise solution
     precise_cax = axs[1].pcolormesh(x_grid, y_grid, precise_tensor.detach().numpy(), cmap='plasma', vmin=0, vmax=1)
     fig.colorbar(precise_cax)
-
-    max = 0.0
 
     def update(t):
         # Create a combined tensor for x, y, and the current t value
